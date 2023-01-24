@@ -4,21 +4,30 @@
 #include<string_view>
 #include "BucketNode.h"
 
+template <typename K, typename V>
 class HashMap{
     private:
         size_t bucketSize;
-        BucketNode** bucket = nullptr;
-        BucketNode* getNode(std::string_view key) const;
-        size_t getIndexForKey(std::string_view key) const;
+        BucketNode<K,V>** bucket = nullptr;
+        BucketNode<K,V>* getNode(K key) const;
+        size_t getIndexForKey(K key) const;
     
     public:
         HashMap();
         HashMap(size_t bucketSize);
         ~HashMap();
-        void put(std::string_view key, int value);
-        int get (std::string_view key) const;
-        void remove(std::string_view key);
-        void xd();
+        void put(K key, V value);
+        V get (K key) const;
+        void remove(K key);
+        // void xd();
 };
+
+
+template class HashMap<std::string_view, std::string_view>;
+template class HashMap<std::string_view, int>;
+template class HashMap<std::string_view, float>;
+template class HashMap<std::string_view, double>;
+template class HashMap<std::string_view, bool>;
+
 
 #endif

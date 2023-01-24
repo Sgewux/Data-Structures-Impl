@@ -3,38 +3,47 @@
 #include<string_view>
 #include<iostream>
 
-BucketNode::BucketNode(std::string_view key, int value){
+template<typename K, typename V>
+BucketNode<K,V>::BucketNode(K key, V value){
     this->key = key;
     this->value = value;
 }
 
-std::string_view BucketNode::getKey(){
+template<typename K, typename V>
+K BucketNode<K,V>::getKey(){
     return this->key;
 }
 
-BucketNode* BucketNode::getNext(){
+template<typename K, typename V>
+BucketNode<K,V>* BucketNode<K,V>::getNext(){
     return this->next;
 }
 
-BucketNode* BucketNode::getPrev(){
+template<typename K, typename V>
+BucketNode<K,V>* BucketNode<K,V>::getPrev(){
     return this->prev;
 }
 
-void BucketNode::setNext(BucketNode* next){
+template<typename K, typename V>
+void BucketNode<K,V>::setNext(BucketNode<K,V>* next){
     this->next = next;
 }
 
-void BucketNode::setPrev(BucketNode* prev){
+template<typename K, typename V>
+void BucketNode<K,V>::setPrev(BucketNode<K,V>* prev){
     this->prev = prev;
 }
 
-void BucketNode::setValue(int value){
+template<typename K, typename V>
+void BucketNode<K,V>::setValue(V value){
     this->value = value;
 }
-int BucketNode::getValue(){
+
+template<typename K, typename V>
+V BucketNode<K,V>::getValue(){
     return this->value;
 }
-
-BucketNode::~BucketNode(){
+template<typename K, typename V>
+BucketNode<K,V>::~BucketNode(){
     std::cout << "Deleting node w key: " << this->key << std::endl;
 }
