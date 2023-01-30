@@ -1,27 +1,10 @@
 #include<iostream>
+#include<string_view>
 #include "LinkedList.h"
 
+// main file for testing 
 
-void removeEven(LinkedList& list){
-    for (size_t i = 0; i < list.length(); i++)
-    {
-        if(list.get(i) % 2 == 0){
-            list.remove(i);
-        }
-    }
-    
-}
-
-void removeOdd(LinkedList& list){
-    for (size_t i = 0; i < list.length(); i++)
-    {
-        if(list.get(i) % 2 != 0){
-            list.remove(i);
-        }
-    }
-}
-
-void printWithLen(LinkedList& a, LinkedList& b){
+void printWithLen(const LinkedList<int>& a, const LinkedList<int>& b){
     a.print();
     std::cout << " len: " << a.length() << std::endl;
     
@@ -31,51 +14,60 @@ void printWithLen(LinkedList& a, LinkedList& b){
 
 int main(){
 
+    auto isEven = [](int a) -> bool {
+        if(a%2 == 0){
+            return true;
+        } else {
+            return false;
+        }
+    };
 
-    // auto func = [](int a)->bool{
-    //      return a > ;
-    // };
-
-    // LinkedList a;
-    // LinkedList b;
-
-    // for(size_t i = 1; i <= 10; i++){
-    //     a.add(i);
-    //     b.add(i);
-    // }
-
-    // printWithLen(a,b);
-
-    // removeEven(a);
-    // removeOdd(b);
-
-    // std::cout << "================" << std::endl;
-    // printWithLen(a,b);
-    
-    // a.add(15, 3);
-
-    // printWithLen(a,b);
+    auto isOdd = [](int a) -> bool {
+        if(a%2 == 0){
+            return false;
+        } else {
+            return true;
+        }
+    };
 
 
-    LinkedList a;
+    LinkedList<int> a;
+    LinkedList<int> b;
+
     for(size_t i = 1; i <= 10; i++){
-        a.add(i,0);
+        a.add(i);
+        b.add(i);
     }
 
+    printWithLen(a,b);
 
+    a.removeIf(isEven); // Removing evens
+    b.removeIf(isOdd); // Removing odds
 
-    a.print();
-    std::cout << " len: " << a.length() << std::endl;
+    std::cout << "================" << std::endl;
+    printWithLen(a,b);
+    
+    a.add(15, 3);
 
-    removeOdd(a);
+    printWithLen(a,b);
 
-    a.print();
-    std::cout << " len: " << a.length() << std::endl;
+    // Examples with cities
 
-    a.add(-1, 3);
+    LinkedList<std::string_view> cities;
+    cities.add("Bogota");
+    cities.add("Ibague");
+    cities.add("Los Angeles");
+    cities.add("New York");
+    
+    cities.print();
+    std::cout << std::endl;
 
-    a.print();
-    std::cout << " len: " << a.length() << std::endl;
+    cities.remove(2);
+    cities.add("Paris", 1);
+
+    cities.print();
+    std::cout << std::endl; 
+
 
 
        

@@ -1,26 +1,29 @@
 #include<iostream>
+#include<functional>
 #include "LinkedList.h"
 
-LinkedList::~LinkedList(){
-    Node* current = this->head;
+template<typename T>
+LinkedList<T>::~LinkedList(){
+    Node<T>* current = this->head;
 
     while(current){
-        Node* former = current;
+        Node<T>* former = current;
         current = current->getNext();
         delete former;
     }
 }
 
-void LinkedList::add(int value){ // Ads node to the end
+template<typename T>
+void LinkedList<T>::add(T value){ // Ads node to the end
     
-    Node* newNode = new Node(value);
+    Node<T>* newNode = new Node<T>(value);
 
     if(!this->head){ // First time adding element
         this->head = newNode;
         this->tail = newNode;
     
     } else {
-        Node* formerTail = this->tail;
+        Node<T>* formerTail = this->tail;
         this->tail = newNode;
         formerTail->setNext(newNode); // Putting it as former tail's next node
         
@@ -29,8 +32,9 @@ void LinkedList::add(int value){ // Ads node to the end
     this->len++; // increasing length attr
 }
 
-Node* LinkedList::getNodeAtIndex(unsigned int index){
-    Node* toReturn = this->head;
+template<typename T>
+Node<T>* LinkedList<T>::getNodeAtIndex(unsigned int index) const{
+    Node<T>* toReturn = this->head;
     
     if(index < this->len){
 
@@ -46,14 +50,15 @@ Node* LinkedList::getNodeAtIndex(unsigned int index){
     
 }
 
+template<typename T>
+T LinkedList<T>::get(unsigned int index) const{
+    Node<T>* nodeAtIndex = getNodeAtIndex(index);
 
-int LinkedList::get(unsigned int index){
-    Node* nodeAtIndex = getNodeAtIndex(index);
-
-    return nodeAtIndex ? nodeAtIndex->getValue() : -1;
+    return nodeAtIndex->getValue();
 }
 
-void LinkedList::add(int value, unsigned int index){
+template<typename T>
+void LinkedList<T>::add(T value, unsigned int index){
 
   
     if(index == 0){ // Corner case: adding at the beggining
@@ -61,8 +66,8 @@ void LinkedList::add(int value, unsigned int index){
             add(value); // First time adding element
         
         } else { 
-            Node* newNode = new Node(value);
-            Node* formerHead = this->head;
+            Node<T>* newNode = new Node<T>(value);
+            Node<T>* formerHead = this->head;
             
             newNode->setNext(formerHead);
             this->head = newNode;
@@ -74,9 +79,9 @@ void LinkedList::add(int value, unsigned int index){
         add(value);
 
     } else { // Adding at the middle
-        Node* newNode = new Node(value);
-        Node* nodeBefore = this->getNodeAtIndex(index - 1);
-        Node* actualNode = nodeBefore->getNext();
+        Node<T>* newNode = new Node<T>(value);
+        Node<T>* nodeBefore = this->getNodeAtIndex(index - 1);
+        Node<T>* actualNode = nodeBefore->getNext();
 
         nodeBefore->setNext(newNode);
         newNode->setNext(actualNode);
@@ -86,8 +91,9 @@ void LinkedList::add(int value, unsigned int index){
 
 }
 
-void LinkedList::print(){
-    Node* current = this->head;
+template<typename T>
+void LinkedList<T>::print() const{
+    Node<T>* current = this->head;
     while (current)
     {
         std::cout << current->getValue() << ", ";
@@ -96,7 +102,8 @@ void LinkedList::print(){
     
 }
 
-void LinkedList::remove(){
+template<typename T>
+void LinkedList<T>::remove(){
     if(this->tail){ // List not empty
 
         if(this->len == 1){ // Single element list
@@ -106,8 +113,8 @@ void LinkedList::remove(){
             this->len--;
             
         } else {
-            Node* nodeBeforeTail = this->getNodeAtIndex(this->len-2);
-            Node* formerTail = this->tail;
+            Node<T>* nodeBeforeTail = this->getNodeAtIndex(this->len-2);
+            Node<T>* formerTail = this->tail;
             nodeBeforeTail->setNext(nullptr);
             this->tail = nodeBeforeTail;
 
@@ -118,15 +125,16 @@ void LinkedList::remove(){
     }
 }
 
-void LinkedList::remove(unsigned int index){
+template<typename T>
+void LinkedList<T>::remove(unsigned int index){
 
     if(index == 0){ // Corner case: deleteing at beggining
         if(this->len == 1){ // Single element list
             remove();
             
         } else {
-            Node* formerHead = this->head;
-            Node* newHead = this->head->getNext();
+            Node<T>* formerHead = this->head;
+            Node<T>* newHead = this->head->getNext();
             this->head = newHead;
 
             delete formerHead;
@@ -139,9 +147,9 @@ void LinkedList::remove(unsigned int index){
         remove();
     
     } else { // Normal case: deleting somewhere in the middle
-        Node* nodeBefore = getNodeAtIndex(index - 1);
-        Node* formerNode = nodeBefore->getNext();
-        Node* nodeAfter = formerNode->getNext();
+        Node<T>* nodeBefore = getNodeAtIndex(index - 1);
+        Node<T>* formerNode = nodeBefore->getNext();
+        Node<T>* nodeAfter = formerNode->getNext();
 
         nodeBefore->setNext(nodeAfter);
         
@@ -153,16 +161,28 @@ void LinkedList::remove(unsigned int index){
     
 }
 
-// void LinkedList::removeIf(std::function<bool(int)>& predicate){
-//     for (size_t i = 0; i < this->len; i++)
-//     {
-//         if(predicate(get(i))){
-//             remove(i);
-//         }
-//     }
-    
-// }
+template<typename T>
+void LinkedList<T>::removeIf(const std::function<bool (T) >& predicate){
+    Node<T>* current = this->head;
+    size_t idx = 0;
 
-int LinkedList::length(){
+    while (current)
+    {
+        Node<T>* currentsNex = current->getNext(); // Storing next in a variable to preserve it
+
+        if(predicate(current->getValue())){ // if predicate returns true
+            remove(idx);
+        
+        } else {
+            idx++; // idx increases only if we have not deleted anything, if we did index remains the same because list's size decreased
+        }
+
+        current = currentsNex; // We always update the current pointer
+    }
+    
+}
+
+template<typename T>
+size_t LinkedList<T>::length() const{
     return this->len;
 }

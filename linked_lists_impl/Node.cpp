@@ -1,23 +1,27 @@
 #include<iostream>
 #include "Node.h"
 
-Node::Node(int value){
+template <typename T>
+Node<T>::Node(T value){
     this->value = value;
 }
 
-Node* Node::getNext(){
+template <typename T>
+Node<T>* Node<T>::getNext(){
     return this->next;
 }
 
-void Node::setNext(Node* next){
+template <typename T>
+void Node<T>::setNext(Node<T>* next){
     this->next = next;
 }
 
-int Node::getValue(){
+template <typename T>
+T Node<T>::getValue(){
     return this->value;
 }
 
-
-Node::~Node(){
+template <typename T>
+Node<T>::~Node(){
     std::cout << "Deleting Node w value: " << this->value << std::endl;
 }
